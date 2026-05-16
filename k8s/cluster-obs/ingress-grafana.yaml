@@ -6,8 +6,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-  # O endereço bonito que vamos digitar no navegador
-  - host: grafana.local
+  - host: grafana.local #endereço para acessar o grafana
     http:
       paths:
       - path: /

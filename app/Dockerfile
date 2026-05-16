@@ -1,4 +1,3 @@
-# Usa uma imagem oficial do Python levinha
 FROM python:3.12-slim
 
 # Define o diretório de trabalho dentro do container

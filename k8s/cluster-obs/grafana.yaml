@@ -6,12 +6,13 @@ data:
   datasources.yaml: |
     apiVersion: 1
     datasources:
+    # --- GRAFANA TEMPO ---
     - name: Tempo
       type: tempo
       access: proxy
       url: http://tempo:3200
       isDefault: true
-    # --- ADICIONAMOS O PROMETHEUS AQUI ---
+    # --- PROMETHEUS ---
     - name: Prometheus
       type: prometheus
       access: proxy
