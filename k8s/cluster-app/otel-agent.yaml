@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-agent-config
+data:
+  config.yaml: |
+    # 1. RECEIVERS: O Agent coleta dados da própria máquina (host)
+    receivers:
+      hostmetrics:
+        collection_interval: 10s
+        scrapers:
+          cpu:
+          memory:
+          load:
+          disk:
+
+    # 2. PROCESSORS: Agrupa os dados antes de enviar
+    processors:
+      batch:
+
+    # 3. EXPORTERS: Envia os dados para o Ingress do Cluster 2 via rede do Docker
+    exporters:
+      otlphttp:
+        endpoint: "http://cluster-obs-control-plane"
+
+    # 4. PIPELINES: Ativa a coleta de métricas de infraestrutura
+    service:
+      pipelines:
+        metrics:
+          receivers: [hostmetrics]
+          processors: [batch]
+          exporters: [otlphttp]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-agent
+  template:
+    metadata:
+      labels:
+        app: otel-agent
+    spec:
+      containers:
+      - name: otel-agent
+        image: otel/opentelemetry-collector-contrib:0.98.0
+        command:
+          - "/otelcol-contrib"
+          - "--config=/conf/config.yaml"
+        volumeMounts:
+        - name: config-vol
+          mountPath: /conf
+      volumes:
+      - name: config-vol
+        configMap:
+          name: otel-agent-config

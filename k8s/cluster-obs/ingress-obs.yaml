@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: otel-collector-ingress
+spec:
+  rules:
+  - host: cluster-obs-control-plane
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: otel-collector
+            port:
+              number: 4318
