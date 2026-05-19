@@ -25,6 +25,7 @@ kind: Service
 metadata:
   name: tempo
 spec:
+  type: NodePort
   selector:
     app: tempo
   ports:
@@ -32,6 +33,7 @@ spec:
       port: 4317
     - name: http
       port: 3200
+      nodePort: 30200
 ---
 apiVersion: apps/v1
 kind: Deployment

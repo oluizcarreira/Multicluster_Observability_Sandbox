@@ -10,7 +10,7 @@ data:
       - job_name: 'prometheus'
         static_configs:
           - targets: ['localhost:9090']
-      - job_name: 'api-python-metrics' # NOVO!
+      - job_name: 'api-python-metrics'
         static_configs:
           - targets: ['otel-collector:8889']
 ---
@@ -19,10 +19,12 @@ kind: Service
 metadata:
   name: prometheus
 spec:
+  type: NodePort
   selector:
     app: prometheus
   ports:
     - port: 9090
+      nodePort: 30090
 ---
 apiVersion: apps/v1
 kind: Deployment
